@@ -1,0 +1,9 @@
+# Dependency directories
+.build/app/node_modules/
+
+# Do not commit terraform config/state files
+terraform.tfstate
+terraform.tfstate.backup
+.terraform/**/*
+.terraform
+.terraform.lock.hcl
