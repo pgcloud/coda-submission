@@ -8,7 +8,7 @@ resource "aws_iam_role" "codepipeline_role" {
     {
       "Action": "sts:AssumeRole",
       "Principal": {
-        "Service": "codepipeline.amazonaws.com"
+        "Service": [ "codepipeline.amazonaws.com", "codedeploy.amazonaws.com" ]
       },
       "Effect": "Allow"
     }
@@ -36,7 +36,8 @@ resource "aws_iam_policy" "codepipeline_policy" {
       "Action" : [
         "codebuild:StartBuild", "codebuild:BatchGetBuilds",
         "cloudformation:*",
-        "iam:PassRole"
+        "iam:PassRole",
+        "codedeploy:*"
       ],
       "Effect": "Allow",
       "Resource": "*"
@@ -122,24 +123,24 @@ resource "aws_codepipeline" "pipeline" {
     }
   }
 
-  # stage {
-  #   name = "Deploy"
-  #   action {
-  #     name            = "Deploy"
-  #     category        = "Deploy"
-  #     owner           = "AWS"
-  #     version         = "1"
-  #     provider        = "CodeDeployToECS"
-  #     run_order       = 1
-  #     input_artifacts = ["BuildOutput"]
-  #     configuration = {
-  #       ApplicationName                = aws_codedeploy_app.example_deploy.name
-  #       DeploymentGroupName            = aws_codedeploy_deployment_group.this.deployment_group_name
-  #       TaskDefinitionTemplateArtifact = "build"
-  #       AppSpecTemplateArtifact        = "build"
-  #     }
-  #   }
-  # }
+  stage {
+    name = "Deploy"
+    action {
+      name            = "Deploy"
+      category        = "Deploy"
+      owner           = "AWS"
+      version         = "1"
+      provider        = "CodeDeployToECS"
+      run_order       = 1
+      input_artifacts = ["BuildOutput"]
+      configuration = {
+        ApplicationName                = aws_codedeploy_app.example_deploy.name
+        DeploymentGroupName            = aws_codedeploy_deployment_group.this.deployment_group_name
+        TaskDefinitionTemplateArtifact = "build"
+        AppSpecTemplateArtifact        = "build"
+      }
+    }
+  }
 }
 
 output "pipeline_url" {

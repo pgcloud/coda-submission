@@ -36,3 +36,17 @@ Wait for this task to be completed. Please note at this stage the codepipeline w
 
 
 ### Task #2
+
+
+
+
+
+### Addendum
+
+Outstanding Issues:
+
+The S3 bucket created by terraform is subsequently modified by Codepipeline, and even with `force delete` = `true` enabled, the bucket is unable to be deleted by Terraform during a `destroy` run. This is an issue that with additional time could be solved, however, the current recommendation is to empty then delete the S3 bucket, either via the CLI or GUI, prior to running `terraform destroy`
+
+Additionally there is an issue with deleting the created ECR registry, after an image has been deployed into it. Same advice as for the S3 bucket applies - delete the ECR registry prior to running `terraform destroy`
+
+Failure to take these steps will mean terraform will delete everything except the S3 bucket and ECR registry. If that is the case, they will still need to be manually deleted, then `terraform destroy` ran again to ensure the terraform state file is correct and matches reality.
