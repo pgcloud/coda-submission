@@ -1,6 +1,6 @@
-aws_region                       = "eu-west-1"
+aws_region                       = "ap-southeast-1"
 environment                      = "example"
-vpc_azs                          = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+vpc_azs                          = ["ap-southeast-1a", "ap-southeast-1b", "ap-southeast-1c"]
 vpc_cidr                         = "10.10.0.0/16"
 ecr_force_delete                 = false # Mark as true to enable deletion of this IaC infrastructure.
 ecs_example_task_family          = "hello-world-app"

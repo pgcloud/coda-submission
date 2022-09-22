@@ -1,6 +1,6 @@
 export MY_AWS_ACCOUNT=$(aws sts get-caller-identity | jq -r ".Account")
 
-export MY_AWS_REGION=eu-west-1
+export MY_AWS_REGION=ap-southeast-1
 
 docker build --no-cache --build-arg IMAGE_VERSION="1.0" --build-arg IMAGE_CREATE_DATE="`date -u +"%Y-%m-%dT%H:%M:%SZ"`" -f Dockerfile -t "example:latest" app
 

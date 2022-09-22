@@ -96,7 +96,7 @@ resource "aws_codepipeline" "pipeline" {
       owner            = "AWS"
       version          = "1"
       provider         = "CodeCommit"
-      output_artifacts = ["SourceOutput"]
+      output_artifacts = ["source"]
       run_order        = 1
       configuration = {
         RepositoryName       = var.source_repo_name
@@ -114,8 +114,8 @@ resource "aws_codepipeline" "pipeline" {
       owner            = "AWS"
       version          = "1"
       provider         = "CodeBuild"
-      input_artifacts  = ["SourceOutput"]
-      output_artifacts = ["BuildOutput"]
+      input_artifacts  = ["source"]
+      output_artifacts = ["build"]
       run_order        = 1
       configuration = {
         ProjectName = aws_codebuild_project.codebuild.id
@@ -132,7 +132,7 @@ resource "aws_codepipeline" "pipeline" {
       version         = "1"
       provider        = "CodeDeployToECS"
       run_order       = 1
-      input_artifacts = ["BuildOutput"]
+      input_artifacts = ["build"]
       configuration = {
         ApplicationName                = aws_codedeploy_app.example_deploy.name
         DeploymentGroupName            = aws_codedeploy_deployment_group.this.deployment_group_name

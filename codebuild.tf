@@ -33,7 +33,8 @@ resource "aws_iam_policy" "codebuild_policy" {
     {
       "Action": [
         "logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents",
-        "ecr:GetAuthorizationToken"
+        "ecr:GetAuthorizationToken",
+        "ecs:DescribeTaskDefinition"
       ],
       "Effect": "Allow",
       "Resource": "*"
@@ -105,17 +106,22 @@ resource "aws_codebuild_project" "codebuild" {
       name  = "CONTAINER_NAME"
       value = var.ecs_example_task_family
     }
+    environment_variable {
+      name  = "TASK_DEFINITION"
+      value = "arn:aws:ecs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:task-definition/${aws_ecs_task_definition.hello_world.family}"
+    }
+
   }
   source {
     type      = "CODEPIPELINE"
     buildspec = <<BUILDSPEC
 version: 0.2
-runtime-versions:
-  nodejs: 12
+
 phases:
   install:
-    runtime-versions:
-      docker: 18
+    commands:
+      - apt-get update
+      - apt install jq
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
@@ -135,8 +141,13 @@ phases:
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - aws ecs describe-task-definition --task-definition hello-world-app | jq '.taskDefinition' > taskdef.json
+      - envsubst < appspec_template.yaml > appspec.yaml
 artifacts:
-    files: imagedefinitions.json
+  files:
+    - appspec.yaml
+    - taskdef.json
+    - imagedefinitions.json 
 BUILDSPEC
   }
 }
