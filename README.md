@@ -13,7 +13,7 @@
 
 Build Instructions
 
-1. Ensure that the appropriate permissions are set up for terraform to connect to the AWS API. Whilst in a production environment the AWS credentials would be securely stored and the terraform actions ran by a 3rd party tool such as a `Github action` or Hashicorp's own `Terraform Cloud`, in this assignment, as this is not expected to get promoted to a production environment, we leverage environment variables. Thus please ensure the follow variables are set before running terraform
+1. Ensure that the appropriate permissions are set up for terraform to connect to the AWS API. Whilst in a production environment the AWS credentials would be securely stored and the terraform actions ran by a 3rd party tool such as a `Github action` or Hashicorp's own `Terraform Cloud`, in this assignment, as this is not expected to get promoted to a production environment, we leverage environment variables. Thus please ensure the following variables are set before running terraform
     
     * `AWS_ACCESS_KEY_ID`
     * `AWS_SECRET_ACCESS_KEY`
