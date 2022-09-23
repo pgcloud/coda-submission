@@ -4,7 +4,7 @@ ARG IMAGE_CREATE_DATE
 ARG IMAGE_VERSION
 
 # Metadata as defined in OCI image spec annotations - https://github.com/opencontainers/image-spec/blob/master/annotations.md
-LABEL org.opencontainers.image.title="Hello World!" \
+LABEL org.opencontainers.image.title="Hello World" \
       org.opencontainers.image.description="Provides a demo image to deploy to a cluster" \
       org.opencontainers.image.created=$IMAGE_CREATE_DATE \
       org.opencontainers.image.version=$IMAGE_VERSION

@@ -1,17 +1,16 @@
 # Load Balancer Configuration
 
 # Configure LB default security, configure blue/green target groups
-#
-#
 
+# Set ingress on the loadbalancer to port 80 (HTTP) only
 resource "aws_security_group" "lb" {
   name   = "example-alb-security-group"
   vpc_id = module.vpc.vpc_id
 
   ingress {
-    protocol    = "-1"
-    from_port   = 0
-    to_port     = 0
+    protocol    = "tcp"
+    from_port   = 80
+    to_port     = 80
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -23,6 +22,7 @@ resource "aws_security_group" "lb" {
   }
 }
 
+# Create the example/default loadbalancer (ALB)
 resource "aws_lb" "default" {
   name               = "example-lb"
   internal           = false
@@ -35,13 +35,16 @@ resource "aws_lb" "default" {
   }
 }
 
+
+# Local variables used in aws_lb_target_group, below
 locals {
   target_groups = [
-    "green",
     "blue",
+    "green",
   ]
 }
 
+# ALB Target Groups (Blue/Green)
 resource "aws_lb_target_group" "hello_world" {
   count       = length(local.target_groups)
   name        = "example-target-group-${element(local.target_groups, count.index)}"
@@ -56,6 +59,7 @@ resource "aws_lb_target_group" "hello_world" {
 
 }
 
+# ALB Listener
 resource "aws_lb_listener" "hello_world" {
   load_balancer_arn = aws_lb.default.id
   port              = "80"

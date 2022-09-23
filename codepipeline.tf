@@ -35,7 +35,6 @@ resource "aws_iam_policy" "codepipeline_policy" {
     {
       "Action" : [
         "codebuild:StartBuild", "codebuild:BatchGetBuilds",
-        "cloudformation:*",
         "iam:PassRole",
         "codedeploy:*"
       ],

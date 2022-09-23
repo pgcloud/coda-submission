@@ -17,14 +17,15 @@ resource "aws_ecs_cluster" "example" {
 
 # create ecs security group
 resource "aws_security_group" "hello_world_task" {
+  depends_on = [ aws_security_group.lb ]
   name   = "example-task-security-group"
   vpc_id = module.vpc.vpc_id
 
   ingress {
-    protocol    = "-1"
-    from_port   = 0
-    to_port     = 0
-    cidr_blocks = ["0.0.0.0/0"]
+    protocol    = "tcp"
+    from_port   = 8080
+    to_port     = 8080
+    security_groups = [ aws_security_group.lb.id ]
   }
 
   egress {
@@ -35,7 +36,7 @@ resource "aws_security_group" "hello_world_task" {
   }
 }
 
-## Create ECS-ECR link
+# create the AssumeRole link to allow the ECS task definition to execute
 resource "aws_iam_role" "ecs_task_execution_role" {
   name = "ecsTaskExecutionRole-${var.environment}"
 

@@ -51,7 +51,7 @@ resource "aws_iam_role_policy_attachment" "trigger-attach" {
 }
 
 resource "aws_cloudwatch_event_rule" "trigger_rule" {
-  description   = "Trigger the pipeline on change to repo/branch"
+  description   = "Trigger the pipeline on change to specified branch"
   event_pattern = <<PATTERN
 {
   "source": [ "aws.codecommit" ],

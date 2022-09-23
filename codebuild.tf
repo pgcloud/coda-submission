@@ -4,8 +4,6 @@
 
 data "aws_caller_identity" "current" {}
 
-# Codebuild role
-
 resource "aws_iam_role" "codebuild_role" {
   assume_role_policy = <<EOF
 {
